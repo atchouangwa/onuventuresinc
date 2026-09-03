@@ -88,6 +88,36 @@ server-side, and caps the message at 5,000 characters.
 Signup is hosted externally by Constant Contact and linked from the newsletter
 band. No API key needed.
 
+## Social previews (Open Graph)
+
+Every page carries Open Graph and Twitter Card tags plus a canonical link. The
+share cards live in `og/` — 1200×630 JPEGs built from each page's own hero
+rendering, with a bottom scrim and the wordmark in white. They are JPEG rather
+than WebP on purpose: Facebook does not accept WebP for `og:image`.
+
+| Page | Card | Rendering |
+| --- | --- | --- |
+| `index.html` | `og/home.jpg` | Trailblazer Village aerial |
+| `about.html` | `og/about.jpg` | Trailblazer Village, closer aerial |
+| `approach.html` | `og/approach.jpg` | Trailblazer Village at dusk |
+| `portfolio.html` | `og/portfolio.jpg` | The Adaline, street level |
+| `news.html` | `og/news.jpg` | Miss Eddie's, interior |
+
+**The absolute URLs assume the site is served from `https://onuventuresinc.com`.**
+Scrapers reject relative `og:image` paths, so the host is hard-coded in every
+page. If the site goes live anywhere else — a `*.vercel.app` preview, or another
+domain — update it across all five pages first, or the cards will 404:
+
+```sh
+grep -rl 'onuventuresinc.com' *.html \
+  | xargs sed -i 's|https://onuventuresinc.com|https://YOUR-DOMAIN|g'
+```
+
+After deploying, re-scrape so the platforms drop any cached preview:
+[Facebook debugger](https://developers.facebook.com/tools/debug/) ·
+[LinkedIn inspector](https://www.linkedin.com/post-inspector/).
+
+
 ## Deploying
 
 The site is static with one serverless function, so it deploys as-is from the
