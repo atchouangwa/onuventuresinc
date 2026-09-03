@@ -164,6 +164,89 @@
     });
   }
 
+  /* -- Project overview modal (Portfolio) -------------------------------- */
+
+  var modal = document.querySelector('[data-modal]');
+  var storyEl = document.getElementById('project-stories');
+
+  if (modal && storyEl) {
+    var stories = {};
+    try {
+      stories = JSON.parse(storyEl.textContent);
+    } catch (err) {
+      stories = {};
+    }
+
+    var mImg = modal.querySelector('[data-modal-img]');
+    var mCategory = modal.querySelector('[data-modal-category]');
+    var mName = modal.querySelector('[data-modal-name]');
+    var mMeta = modal.querySelector('[data-modal-meta]');
+    var mStory = modal.querySelector('[data-modal-story]');
+    var mSite = modal.querySelector('[data-modal-site]');
+    var mClose = modal.querySelector('[data-modal-close]');
+    var lastFocus = null;
+
+    function openProject(key) {
+      var p = stories[key];
+      if (!p) return;
+
+      mImg.src = p.img1280 || p.img;
+      mImg.alt = p.alt || '';
+      mCategory.textContent = p.category || '';
+      mName.textContent = p.name || '';
+      mMeta.textContent = [p.location, p.status].filter(Boolean).join(' · ');
+
+      mStory.textContent = '';
+      (p.story || []).forEach(function (para) {
+        var el = document.createElement('p');
+        el.textContent = para;
+        mStory.appendChild(el);
+      });
+
+      if (p.site) {
+        mSite.href = p.siteHref;
+        mSite.textContent = p.site + ' \u2192';
+        mSite.hidden = false;
+      } else {
+        mSite.hidden = true;
+      }
+
+      lastFocus = document.activeElement;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      mClose.focus();
+    }
+
+    function closeProject() {
+      if (modal.hidden) return;
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    document.querySelectorAll('[data-project]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        openProject(el.getAttribute('data-project'));
+      });
+      if (el.getAttribute('role') === 'button') {
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openProject(el.getAttribute('data-project'));
+          }
+        });
+      }
+    });
+
+    mClose.addEventListener('click', closeProject);
+    modal.addEventListener('click', function (e) {
+      if (!e.target.closest('[data-modal-panel]')) closeProject();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeProject();
+    });
+  }
+
   /* -- Init -------------------------------------------------------------- */
 
   syncScrolled();

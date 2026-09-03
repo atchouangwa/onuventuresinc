@@ -1,0 +1,7 @@
+{
+  "name": "onuventuresinc",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Onu Ventures marketing site — static pages plus a serverless contact handler.",
+  "type": "module"
+}
