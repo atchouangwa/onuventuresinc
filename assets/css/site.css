@@ -1260,44 +1260,115 @@ body.header-solid.scrolled:not(.menu-open) .site-header { background: rgba(250, 
 }
 .project__overview:hover { color: var(--gold-ink); border-bottom-color: var(--gold-ink); }
 
-.focus { background: var(--dark); color: var(--bg); scroll-margin-top: 80px; }
-.focus__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  gap: clamp(32px, 5vw, 76px);
-  align-items: start;
-}
-.focus__eyebrow { margin: 0 0 16px; font-size: 10.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: rgba(250, 248, 244, .55); }
-.focus__title {
-  margin: 0 0 24px;
-  font-family: var(--serif);
-  font-weight: 200;
-  font-size: clamp(32px, 4.2vw, 60px);
-  line-height: 1.03;
-  letter-spacing: -.02em;
-  color: #fff;
-}
-.focus__lede {
-  margin: 0 0 22px;
-  font-size: clamp(16px, 1.4vw, 22px);
-  line-height: 1.5;
-  font-family: var(--serif);
-  font-weight: 300;
-  color: rgba(250, 248, 244, .94);
-  max-width: min(34ch, 100%);
-}
-.focus__text { margin: 0 0 18px; font-size: 15px; line-height: 1.8; color: rgba(250, 248, 244, .66); max-width: min(52ch, 100%); }
-.focus__text:last-child { margin-bottom: 0; }
+/* Card gallery ------------------------------------------------------------
+   A scroll-snap track, so touch devices get native swipe and momentum for
+   free. Arrows and dots drive it programmatically for mouse and keyboard. */
 
-.focus__facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
-  gap: 1px;
-  background: rgba(250, 248, 244, .16);
+.gallery__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
-.focus__fact { background: var(--dark); padding: 22px 18px 26px; }
-.focus__fact p:first-child { margin: 0 0 9px; font-size: 9.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(250, 248, 244, .45); }
-.focus__fact p:last-child { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(17px, 1.6vw, 24px); line-height: 1.22; color: #fff; }
+.gallery__track::-webkit-scrollbar { display: none; }
+
+.gallery__slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+/* The scrim and caption sit over the track, so they must not eat the drag. */
+.project__media[data-gallery] .project__scrim,
+.project__media[data-gallery] .project__caption,
+.project__media[data-gallery] .project__status { pointer-events: none; }
+
+.gallery__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
+  background: rgba(25, 22, 23, .5);
+  border: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 220ms ease, background 220ms ease;
+}
+.gallery__nav:hover { background: rgba(25, 22, 23, .82); color: #fff; }
+.gallery__nav--prev { left: 10px; }
+.gallery__nav--next { right: 10px; }
+.gallery__nav[disabled] { opacity: 0 !important; pointer-events: none; }
+
+.project__media:hover .gallery__nav,
+.gallery__nav:focus-visible { opacity: 1; }
+
+/* No hover on touch, so the arrows would never appear — hide them there and
+   let the swipe and the dots carry it. */
+@media (hover: none) {
+  .gallery__nav { display: none; }
+}
+
+.gallery__dots {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.gallery__dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .45);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 220ms ease, transform 220ms ease;
+}
+.gallery__dot[aria-current="true"] { background: #fff; transform: scale(1.25); }
+
+.gallery__count {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  left: 12px;
+  padding: 5px 9px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: #fff;
+  background: rgba(25, 22, 23, .55);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__track { scroll-behavior: auto; }
+}
 
 /* Project modal ----------------------------------------------------------- */
 

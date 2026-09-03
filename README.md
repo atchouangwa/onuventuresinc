@@ -6,7 +6,7 @@ canvases in a Claude Design project.
 ## What's here
 
 ```
-*.html                The five pages
+*.html                The six pages
 assets/css/site.css   Styles (design tokens + components)
 assets/js/site.js     Header scroll state, mobile menu, stat counters,
                       contact form, project-overview modal
@@ -14,7 +14,7 @@ assets/               Logos
 web/                  Project renderings + responsive derivatives
 api/contact.js        Serverless contact-form handler (Resend)
 og/                   1200x630 social share cards
-sitemap.xml           The five pages, for search engines
+sitemap.xml           The six pages, for search engines
 robots.txt            Crawl rules + sitemap pointer
 vercel.json           Cache headers for static assets
 package.json          Declares ESM so api/contact.js runs as a module
@@ -26,14 +26,15 @@ The site is plain HTML/CSS/JS with no build step — deploy the repository root 
 
 | File | Page |
 | --- | --- |
-| `index.html` | Home — hero, stats, capabilities, featured projects, press, investors, contact |
+| `index.html` | Home — hero, stats, capabilities, featured projects, press, newsletter, investors |
 | `about.html` | About — story, stats, leadership, values |
 | `approach.html` | Our Approach — data-driven thesis, capabilities, 7-step lifecycle, impact |
-| `portfolio.html` | Portfolio — all nine projects, project-overview modals, The Adaline in focus |
+| `portfolio.html` | Portfolio — eight projects with galleries and project-overview modals |
 | `news.html` | News — press coverage |
+| `contact.html` | Contact — "Let's build something meaningful.", details and the enquiry form |
 
 All five come from the canvases in the same Claude Design project. The contact
-form lives on the home page; interior pages link to `index.html#contact`.
+form lives on contact.html; every "Get in touch" link points at it.
 
 ## Renderings
 
@@ -48,23 +49,32 @@ future use.
 | `adaline-featured.webp` | The Adaline, street level | Portfolio hero, cards, bands |
 | `trailblazer.webp` | Trailblazer Village courtyard at dusk | Approach hero, cards |
 | `miss-eddies.webp` | Miss Eddie's Market & Café, interior | Cards, News band |
-| `nosta.webp` | NOSTA House, lobby bar | Portfolio |
-| `new-life-farms.webp` | New Life Farms, farmhouse and vineyard | Approach, Portfolio |
-| `sunny-meadow.webp` | Sunny Meadow, aerial | Approach, Portfolio |
-| `concord.webp` | Concord townhomes, Beaumont | Portfolio |
-| `colonial.webp` | 5300 Colonial townhomes | Portfolio |
-| `whitney-oak.webp` | Whitney Oak townhomes | Portfolio |
+| `nosta-level1-lounge.webp` | NOSTA House, Level 1 lounge | Portfolio |
+| `nosta-open-bar.webp` | NOSTA House, Level 2 open lounge and bar | Portfolio |
+| `nosta-art-lounge.webp` | NOSTA House, lounge | Portfolio |
+| `nosta-vinyl-bar.webp` | NOSTA House, Level 3 vinyl bar lounge | Portfolio |
+| `nosta-library.webp` | NOSTA House, Level 3 library | Portfolio |
 | `townhomes-retail-aerial.webp` | Trailblazer Village, closer aerial | Home |
 | `portrait.jpg` | Mikial Onu | About |
-| `adaline-aerial.webp` | The Adaline, aerial | *spare* |
-| `miss-eddies-exterior.webp` | Miss Eddie's, exterior and BKYD | *spare* |
-| `nosta-lounge.webp` | NOSTA House, lounge | *spare* |
+| `adaline-aerial.webp` | The Adaline, full community aerial | The Adaline gallery |
+| `miss-eddies-exterior.webp` | Miss Eddie's, exterior and BKYD | The Adaline gallery |
 | `edison-arts.webp` | Edison Cultural Arts Center | *spare* |
-| `lakeside-homes.webp` | Lakeside homes and trail | *spare* |
-| `townhome-courtyard.webp` | Townhome courtyard | *spare* |
+| `lakeside-homes.webp` | Lakeside homes and trail | Trailblazer gallery |
+| `townhome-courtyard.webp` | Townhome courtyard | Trailblazer gallery |
 
 Each rendering was matched to its project by comparing against the design
 project's own image for that slot, not by guessing from the filename.
+
+## Project galleries
+
+The Adaline, Trailblazer Village and Nosta cards carry an image gallery — the
+full community rendering first, then the closer views.
+
+It is a CSS scroll-snap track, so touch devices get native swipe and momentum
+with no JavaScript at all. `assets/js/site.js` only adds the arrows, dots and
+counter on top, and stops a horizontal drag from being read as a click that
+would open the project modal. A browser that never runs the script still shows
+a swipeable strip of renderings.
 
 ## Contact form
 
@@ -103,13 +113,14 @@ than WebP on purpose: Facebook does not accept WebP for `og:image`.
 | `index.html` | `og/home.jpg` | Trailblazer Village aerial |
 | `about.html` | `og/about.jpg` | Trailblazer Village, closer aerial |
 | `approach.html` | `og/approach.jpg` | Trailblazer Village at dusk |
-| `portfolio.html` | `og/portfolio.jpg` | The Adaline, street level |
+| `portfolio.html` | `og/portfolio.jpg` | The Adaline, full community aerial |
 | `news.html` | `og/news.jpg` | Miss Eddie's, interior |
+| `contact.html` | `og/contact.jpg` | Townhome courtyard |
 
 **The absolute URLs assume the site is served from `https://onuventuresinc.com`.**
 Scrapers reject relative `og:image` paths, so the host is hard-coded in every
 page. If the site goes live anywhere else — a `*.vercel.app` preview, or another
-domain — update it across all five pages first, or the cards will 404:
+domain — update it across all six pages first, or the cards will 404:
 
 ```sh
 grep -rl 'onuventuresinc.com' *.html sitemap.xml robots.txt \
@@ -126,7 +137,7 @@ After deploying, re-scrape so the platforms drop any cached preview:
 
 ## Search engines
 
-`sitemap.xml` lists all five pages with a `lastmod` taken from the last commit
+`sitemap.xml` lists all six pages with a `lastmod` taken from the last commit
 that touched each file, so the date stays honest rather than resetting to today
 whenever the file is regenerated. `robots.txt` allows everything except `/api/`
 — the contact handler is POST-only and has nothing to index — and points at the

@@ -164,6 +164,111 @@
     });
   }
 
+  /* -- Card galleries ---------------------------------------------------- */
+
+  /* Progressive enhancement: the markup is a plain scroll-snap track that
+     already swipes on touch with no JS. This only adds arrows, dots and the
+     counter, and keeps a drag from being mistaken for a click on the card. */
+
+  document.querySelectorAll('[data-gallery]').forEach(function (media) {
+    var track = media.querySelector('[data-gallery-track]');
+    if (!track) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.gallery__slide'));
+    if (slides.length < 2) return;
+
+    var smooth = reduceMotion ? 'auto' : 'smooth';
+    var index = 0;
+
+    var prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'gallery__nav gallery__nav--prev';
+    prev.setAttribute('aria-label', 'Previous image');
+    prev.innerHTML = '\u2039';
+
+    var next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'gallery__nav gallery__nav--next';
+    next.setAttribute('aria-label', 'Next image');
+    next.innerHTML = '\u203a';
+
+    var count = document.createElement('p');
+    count.className = 'gallery__count';
+
+    var dots = document.createElement('div');
+    dots.className = 'gallery__dots';
+    var dotEls = slides.map(function (_, i) {
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'gallery__dot';
+      d.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + slides.length);
+      d.addEventListener('click', function (e) {
+        e.stopPropagation();
+        go(i);
+      });
+      dots.appendChild(d);
+      return d;
+    });
+
+    media.appendChild(prev);
+    media.appendChild(next);
+    media.appendChild(count);
+    media.appendChild(dots);
+
+    function render(i) {
+      if (i === index) return;
+      index = i;
+      dotEls.forEach(function (d, n) { d.setAttribute('aria-current', String(n === i)); });
+      count.textContent = (i + 1) + ' / ' + slides.length;
+      prev.disabled = i === 0;
+      next.disabled = i === slides.length - 1;
+    }
+
+    /* Arrows and dots paint the new state immediately rather than waiting for
+       the scroll to report back, so the controls never lag the image. */
+    function go(i) {
+      i = Math.max(0, Math.min(slides.length - 1, i));
+      render(i);
+      track.scrollTo({ left: track.clientWidth * i, behavior: smooth });
+    }
+
+    // swipes come back through here
+    function sync() {
+      render(Math.round(track.scrollLeft / (track.clientWidth || 1)));
+    }
+
+    prev.addEventListener('click', function (e) { e.stopPropagation(); go(index - 1); });
+    next.addEventListener('click', function (e) { e.stopPropagation(); go(index + 1); });
+
+    /* sync() is a couple of DOM writes and early-returns when the index has
+       not changed, so it runs straight off the scroll event. Gating it behind
+       requestAnimationFrame meant a frame that never came — a background tab,
+       a headless render — left the dots and counter stuck on the old slide. */
+    track.addEventListener('scroll', sync, { passive: true });
+
+    window.addEventListener('resize', sync);
+
+    media.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
+    });
+
+    /* A horizontal drag ends in a click event. Without this, swiping the card
+       on a trackpad or with a mouse would also open the project modal. */
+    var startX = 0;
+    media.addEventListener('pointerdown', function (e) { startX = e.clientX; }, true);
+    media.addEventListener('click', function (e) {
+      if (Math.abs(e.clientX - startX) > 8) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }, true);
+
+    // seed state without waiting for a scroll
+    index = -1;
+    sync();
+  });
+
   /* -- Project overview modal (Portfolio) -------------------------------- */
 
   var modal = document.querySelector('[data-modal]');
