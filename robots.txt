@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# POST-only contact handler; nothing for a crawler to index.
+Disallow: /api/
+
+Sitemap: https://onuventuresinc.com/sitemap.xml

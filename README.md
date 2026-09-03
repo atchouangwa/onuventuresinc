@@ -13,6 +13,9 @@ assets/js/site.js     Header scroll state, mobile menu, stat counters,
 assets/               Logos
 web/                  Project renderings + responsive derivatives
 api/contact.js        Serverless contact-form handler (Resend)
+og/                   1200x630 social share cards
+sitemap.xml           The five pages, for search engines
+robots.txt            Crawl rules + sitemap pointer
 vercel.json           Cache headers for static assets
 package.json          Declares ESM so api/contact.js runs as a module
 ```
@@ -109,13 +112,31 @@ page. If the site goes live anywhere else — a `*.vercel.app` preview, or anoth
 domain — update it across all five pages first, or the cards will 404:
 
 ```sh
-grep -rl 'onuventuresinc.com' *.html \
+grep -rl 'onuventuresinc.com' *.html sitemap.xml robots.txt \
   | xargs sed -i 's|https://onuventuresinc.com|https://YOUR-DOMAIN|g'
 ```
+
+The same host is baked into `sitemap.xml` and `robots.txt`, which is why they
+are in the command above.
 
 After deploying, re-scrape so the platforms drop any cached preview:
 [Facebook debugger](https://developers.facebook.com/tools/debug/) ·
 [LinkedIn inspector](https://www.linkedin.com/post-inspector/).
+
+
+## Search engines
+
+`sitemap.xml` lists all five pages with a `lastmod` taken from the last commit
+that touched each file, so the date stays honest rather than resetting to today
+whenever the file is regenerated. `robots.txt` allows everything except `/api/`
+— the contact handler is POST-only and has nothing to index — and points at the
+sitemap.
+
+`changefreq` and `priority` are deliberately omitted: Google ignores both.
+
+After the site is live, submit `https://YOUR-DOMAIN/sitemap.xml` once in
+[Google Search Console](https://search.google.com/search-console). Regenerate
+the sitemap whenever a page is added or removed.
 
 
 ## Deploying
