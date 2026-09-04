@@ -29,12 +29,28 @@ The site is plain HTML/CSS/JS with no build step — deploy the repository root 
 | `index.html` | Home — hero, stats, capabilities, featured projects, press, newsletter, investors |
 | `about.html` | About — story, stats, leadership, values |
 | `approach.html` | Our Approach — data-driven thesis, capabilities, 7-step lifecycle, impact |
-| `portfolio.html` | Portfolio — eight projects with galleries and project-overview modals |
+| `portfolio.html` | Portfolio — nine projects grouped into Hospitality, Mixed Use and Residential, with galleries and project-overview modals |
 | `news.html` | News — press coverage |
 | `contact.html` | Contact — "Let's build something meaningful.", details and the enquiry form |
 
-All five come from the canvases in the same Claude Design project. The contact
-form lives on contact.html; every "Get in touch" link points at it.
+The first five come from the canvases in the same Claude Design project.
+Contact is a page of its own: the form and its heading are not repeated
+anywhere else, and every "Get in touch" link across the site points at it.
+
+Portfolio projects are grouped into three categories, with a jump nav in the
+section header:
+
+| Category | Projects |
+| --- | --- |
+| Hospitality | Miss Eddie's Market & Café, Nosta, New Life Farms |
+| Mixed Use | The Adaline, Trailblazer Village (Phase 1) |
+| Residential | Concord, Colonial, Sunny Meadow, Whitney Oak |
+
+Each card's own label carries the sub-type only (`Food & Beverage`,
+`Build-to-Rent`), since the section heading already states the parent.
+
+Miss Eddie's Market & Café and The Adaline are separate projects, each with its
+own gallery and overview, even though Miss Eddie's anchors The Adaline Plaza.
 
 ## Renderings
 
@@ -46,9 +62,9 @@ future use.
 | File | Subject | Used on |
 | --- | --- | --- |
 | `hero.webp` | Trailblazer Village aerial | Home hero, About hero |
-| `adaline-featured.webp` | The Adaline, street level | Portfolio hero, cards, bands |
+| `adaline-featured.webp` | The Adaline, street level | The Adaline gallery, bands |
 | `trailblazer.webp` | Trailblazer Village courtyard at dusk | Approach hero, cards |
-| `miss-eddies.webp` | Miss Eddie's Market & Café, interior | Cards, News band |
+| `miss-eddies.webp` | Miss Eddie's Market & Café, interior | Miss Eddie's gallery, News band |
 | `nosta-level1-lounge.webp` | NOSTA House, Level 1 lounge | Portfolio |
 | `nosta-open-bar.webp` | NOSTA House, Level 2 open lounge and bar | Portfolio |
 | `nosta-art-lounge.webp` | NOSTA House, lounge | Portfolio |
@@ -56,8 +72,8 @@ future use.
 | `nosta-library.webp` | NOSTA House, Level 3 library | Portfolio |
 | `townhomes-retail-aerial.webp` | Trailblazer Village, closer aerial | Home |
 | `portrait.jpg` | Mikial Onu | About |
-| `adaline-aerial.webp` | The Adaline, full community aerial | The Adaline gallery |
-| `miss-eddies-exterior.webp` | Miss Eddie's, exterior and BKYD | The Adaline gallery |
+| `adaline-aerial.webp` | The Adaline, full community aerial | Portfolio hero, The Adaline gallery |
+| `miss-eddies-exterior.webp` | Miss Eddie's, exterior and BKYD | Miss Eddie's gallery |
 | `edison-arts.webp` | Edison Cultural Arts Center | *spare* |
 | `lakeside-homes.webp` | Lakeside homes and trail | Trailblazer gallery |
 | `townhome-courtyard.webp` | Townhome courtyard | Trailblazer gallery |
@@ -67,8 +83,8 @@ project's own image for that slot, not by guessing from the filename.
 
 ## Project galleries
 
-The Adaline, Trailblazer Village and Nosta cards carry an image gallery — the
-full community rendering first, then the closer views.
+The Adaline, Miss Eddie's, Trailblazer Village and Nosta cards carry an image
+gallery — the full or headline rendering first, then the closer views.
 
 It is a CSS scroll-snap track, so touch devices get native swipe and momentum
 with no JavaScript at all. `assets/js/site.js` only adds the arrows, dots and
