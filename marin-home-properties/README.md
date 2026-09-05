@@ -26,7 +26,7 @@ header, mobile panel and footer are duplicated across both — keep them in sync
 
 | File | Canvas route | Sections |
 | --- | --- | --- |
-| `index.html` | `isHome` | Hero, market intro, About, the three-step process, twelve communities, market intelligence + community snapshot, selected sales, reviews, FAQ, contact |
+| `index.html` | `isHome` | Hero, market intro, About, the three-step process, twelve communities, market intelligence + community snapshot, selected sales, testimonials, FAQ, contact |
 | `recently-sold.html` | `isSold` | Hero, three featured sales, the full-record embed slot, closing call to action |
 
 Interactive behaviour ported from the canvas lives in `assets/js/site.js`. With
@@ -68,8 +68,11 @@ Rerun the generator with `python3 tools/make-illustrations.py` — it rewrites
 - [ ] **MLS / IDX.** Replace the `.embed-slot` block in `recently-sold.html`
       with the approved provider snippet and restyle it to the ivory palette
       and the Cormorant / Jost type.
-- [ ] **Reviews.** Three slots on the home page, to be filled verbatim from the
-      Google Business Profile linked on each card. Do not paraphrase.
+- [ ] **Testimonials.** The home page renders the Jotform website widget
+      (`JFWebsiteWidget-01a0723b835070008e40dd8bcdd53d0976e3`) in place of the
+      former three review cards. It loads a third-party script at runtime, so
+      it is inert when the page is opened over `file://` and shows nothing.
+      Verify it on a served page, and manage the testimonial content in Jotform.
 - [ ] **Market figures.** The four metrics and the eight snapshot rows are the
       canvas's Q1–Q2 2026 numbers, kept together in one block in `index.html`.
       Verify against BAREIS before publication and refresh each quarter.
